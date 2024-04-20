@@ -71,8 +71,9 @@ def plot():
 
   fig.show()
 
-
-# plot()
+  # fig.write_html("index.html")
+  fig.write_image("figCopy.png")
+plot()
 
 del df["Dividends"]
 del df["Stock Splits"]
@@ -83,76 +84,76 @@ df["Target"] = (df["Tomorrow"] > df["Close"]).astype(int)
 
 df = df.loc["2005-01-01":].copy()
 
-from sklearn.ensemble import RandomForestClassifier
+# from sklearn.ensemble import RandomForestClassifier
 
-model = RandomForestClassifier(n_estimators=5, min_samples_split=100, random_state=1)
+# model = RandomForestClassifier(n_estimators=5, min_samples_split=100, random_state=1)
 
-train = df.iloc[:-100]
-test = df.iloc[-100:]
+# train = df.iloc[:-100]
+# test = df.iloc[-100:]
 
-predictors = ["Close", "Volume", "Open", "High", "Low"]
-model.fit(train[predictors], train["Target"])
+# predictors = ["Close", "Volume", "Open", "High", "Low"]
+# model.fit(train[predictors], train["Target"])
 
-from sklearn.metrics import precision_score
+# from sklearn.metrics import precision_score
 
-preds = model.predict(test[predictors])
-preds = pd.Series(preds, index=test.index)
-precision_score(test["Target"], preds)
+# preds = model.predict(test[predictors])
+# preds = pd.Series(preds, index=test.index)
+# precision_score(test["Target"], preds)
 
-combined = pd.concat([test["Target"], preds], axis=1)
+# combined = pd.concat([test["Target"], preds], axis=1)
 
-def predict(train, test, predictors, model):
-    model.fit(train[predictors], train["Target"])
-    preds = model.predict(test[predictors])
-    preds = pd.Series(preds, index=test.index, name="Predictions")
-    combined = pd.concat([test["Target"], preds], axis=1)
-    return combined
+# def predict(train, test, predictors, model):
+#     model.fit(train[predictors], train["Target"])
+#     preds = model.predict(test[predictors])
+#     preds = pd.Series(preds, index=test.index, name="Predictions")
+#     combined = pd.concat([test["Target"], preds], axis=1)
+#     return combined
 
-def backtest(data, model, predictors, start=2500, step=250):
-    all_predictions = []
+# def backtest(data, model, predictors, start=2500, step=250):
+#     all_predictions = []
 
-    for i in range(start, data.shape[0], step):
-        train = data.iloc[0:i].copy()
-        test = data.iloc[i:(i+step)].copy()
-        predictions = predict(train, test, predictors, model)
-        all_predictions.append(predictions)
+#     for i in range(start, data.shape[0], step):
+#         train = data.iloc[0:i].copy()
+#         test = data.iloc[i:(i+step)].copy()
+#         predictions = predict(train, test, predictors, model)
+#         all_predictions.append(predictions)
     
-    return pd.concat(all_predictions)
+#     return pd.concat(all_predictions)
 
-horizons = [5,8,20,250,1000]
-new_predictors = []
+# horizons = [5,8,20,250,1000]
+# new_predictors = []
 
-for horizon in horizons:
-    rolling_averages = df.rolling(horizon).mean()
+# for horizon in horizons:
+#     rolling_averages = df.rolling(horizon).mean()
     
-    ratio_column = f"Close_Ratio_{horizon}"
-    df[ratio_column] = df["Close"] / rolling_averages["Close"]
+#     ratio_column = f"Close_Ratio_{horizon}"
+#     df[ratio_column] = df["Close"] / rolling_averages["Close"]
     
-    trend_column = f"Trend_{horizon}"
-    df[trend_column] = df.shift(1).rolling(horizon).sum()["Target"]
+#     trend_column = f"Trend_{horizon}"
+#     df[trend_column] = df.shift(1).rolling(horizon).sum()["Target"]
     
-    new_predictors+= [ratio_column, trend_column]
+#     new_predictors+= [ratio_column, trend_column]
 
-df = df.dropna(subset=df.columns[df.columns != "Tomorrow"])
+# df = df.dropna(subset=df.columns[df.columns != "Tomorrow"])
 
-model = RandomForestClassifier(n_estimators=50, min_samples_split=50, random_state=1)
+# model = RandomForestClassifier(n_estimators=50, min_samples_split=50, random_state=1)
 
-def predict(train, test, predictors, model):
-    model.fit(train[predictors], train["Target"])
-    preds = model.predict_proba(test[predictors])[:,1]
-    preds[preds >=.53] = 1
-    preds[preds <.53] = 0
-    preds = pd.Series(preds, index=test.index, name="Predictions")
-    combined = pd.concat([test["Target"], preds], axis=1)
-    return combined
+# def predict(train, test, predictors, model):
+#     model.fit(train[predictors], train["Target"])
+#     preds = model.predict_proba(test[predictors])[:,1]
+#     preds[preds >=.53] = 1
+#     preds[preds <.53] = 0
+#     preds = pd.Series(preds, index=test.index, name="Predictions")
+#     combined = pd.concat([test["Target"], preds], axis=1)
+#     return combined
 
-predictions = backtest(df, model, new_predictors)
+# predictions = backtest(df, model, new_predictors)
 
-predictions["Predictions"].value_counts()
+# predictions["Predictions"].value_counts()
 
-if predictions["Predictions"].value_counts()[1] - predictions["Predictions"].value_counts()[0] > 40:
-  print("UP UP UP!")
-elif predictions["Predictions"].value_counts()[1] - predictions["Predictions"].value_counts()[0] < -40:
-  print("Going down!")
-else:
-  print("Sideways")
+# if predictions["Predictions"].value_counts()[1] - predictions["Predictions"].value_counts()[0] > 40:
+#   print("UP UP UP!")
+# elif predictions["Predictions"].value_counts()[1] - predictions["Predictions"].value_counts()[0] < -40:
+#   print("Going down!")
+# else:
+#   print("Sideways")
