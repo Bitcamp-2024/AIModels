@@ -229,9 +229,10 @@ else:
    sentiment = -1
 
 stats = get_info(ticker)
-
+print(ticker.info)
 recc = get_recommendation(ticker, stats.get("marketCap"), sentiment)
-output = {"Prediction": result, "sentiment": sentiment, "stats": stats, "recommendation": recc, "df_indicators": df_indicators}
+link = f"https://logo.clearbit.com/{ticker.info.get('website')}"
+output = {"Prediction": result, "sentiment": sentiment, "stats": stats, "recommendation": recc, "logo_link": link, "df_indicators": df_indicators}
 
 
 print(output)
