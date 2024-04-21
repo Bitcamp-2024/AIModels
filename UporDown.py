@@ -3,12 +3,13 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import sys
+from sentiment import get_sentiment, get_info
 
 arguements = sys.argv
 ticker = arguements[1]
 
-df = yf.Ticker(ticker)
-df = df.history(period="15y")
+ticker = yf.Ticker(ticker)
+df = ticker.history(period="15y")
 
 df.index = pd.to_datetime(df.index)
 
@@ -78,7 +79,7 @@ def plot():
   # fig.write_html("index.html")
   # fig.write_image("figCopy.png")
 
-plot()
+# plot()
 
 del df["Dividends"]
 del df["Stock Splits"]
@@ -166,7 +167,19 @@ else:
 
 df_indicators = df[["Close", "Volume", "Open", "High", "Low", "SMA20", "SMA50", "MACD", "Signal_Line"]]
 
-output = {"Prediction": result, "df_indicators": df_indicators}
+sentiment = get_sentiment(ticker)
+
+if sentiment == 0:
+  sentiment = 0
+elif sentiment > 0.1:
+  sentiment = 1
+else:
+   sentiment = -1
+
+info = get_info(ticker)
+
+
+output = {"Prediction": result, "sentiment": sentiment, "info": info, "df_indicators": df_indicators}
 
 
 print(output)
