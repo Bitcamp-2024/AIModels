@@ -157,15 +157,17 @@ predictions = backtest(df, model, new_predictors)
 predictions["Predictions"].value_counts()
 
 if predictions["Predictions"].value_counts()[1] - predictions["Predictions"].value_counts()[0] > 40:
-  print("UP UP UP!")
+  result = ("UP UP UP!")
 elif predictions["Predictions"].value_counts()[1] - predictions["Predictions"].value_counts()[0] < -40:
-  print("Going down!")
+  result = ("Going down!")
 else:
-  print("Sideways")
+  result = ("Sideways")
 
-sys.stdout.flush()
 
 df_indicators = df[["Close", "Volume", "Open", "High", "Low", "SMA20", "SMA50", "MACD", "Signal_Line"]]
 
-print(df_indicators)
+output = {"Prediction": result, "df_indicators": df_indicators}
+
+
+print(output)
 sys.stdout.flush()
