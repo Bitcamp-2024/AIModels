@@ -75,8 +75,9 @@ def plot():
 
   # fig.show()
 
-  fig.write_html("index.html")
-  fig.write_image("figCopy.png")
+  # fig.write_html("index.html")
+  # fig.write_image("figCopy.png")
+  
 plot()
 
 del df["Dividends"]
@@ -161,3 +162,17 @@ elif predictions["Predictions"].value_counts()[1] - predictions["Predictions"].v
   print("Going down!")
 else:
   print("Sideways")
+
+sys.stdout.flush()
+
+print(df["SMA20"])
+sys.stdout.flush()
+
+print(df["SMA50"])
+sys.stdout.flush()
+
+print(df["MACD"])
+sys.stdout.flush()
+
+print(df["Signal_Line"])
+sys.stdout.flush()
