@@ -30,7 +30,7 @@ def plot():
                   open=df['Open'],
                   high=df['High'],
                   low=df['Low'],
-                  close=df['Close'],name="AAPl"),
+                  close=df['Close'],name=ticker),
                 row=1,col=1)
 
   fig.add_trace(go.Scatter(
