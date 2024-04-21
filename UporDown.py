@@ -6,10 +6,10 @@ import sys
 from sentiment import get_sentiment, get_info
 
 arguements = sys.argv
-ticker = arguements[1]
+name = arguements[1]
 
-ticker = yf.Ticker(ticker)
-df = ticker.history(period="15y")
+ticker = yf.Ticker(name)
+df = ticker.history(period="14y")
 
 df.index = pd.to_datetime(df.index)
 
@@ -167,7 +167,7 @@ else:
 
 df_indicators = df[["Close", "Volume", "Open", "High", "Low", "SMA20", "SMA50", "MACD", "Signal_Line"]]
 
-sentiment = get_sentiment(ticker)
+sentiment = get_sentiment(name)
 
 if sentiment == 0:
   sentiment = 0
@@ -176,10 +176,9 @@ elif sentiment > 0.1:
 else:
    sentiment = -1
 
-info = get_info(ticker)
+stats = get_info(name)
 
-
-output = {"Prediction": result, "sentiment": sentiment, "info": info, "df_indicators": df_indicators}
+output = {"Prediction": result, "sentiment": sentiment, "stats": stats, "df_indicators": df_indicators}
 
 
 print(output)

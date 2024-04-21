@@ -25,5 +25,9 @@ def get_info(name):
     ticker = yf.Ticker(name)
     info = ticker.info
 
-    return info.get('forwardEps'), info.get('marketCap'), info.get('trailingPE'), info.get('recommendationKey')
+    data = {"forwardEps": info.get('forwardEps'), 
+            "marketCap": info.get('marketCap'), 
+            "trailingPE": info.get('trailingPE'), 
+            "recommendationKey": info.get('recommendationKey')}
+    return data
 
