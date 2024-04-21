@@ -77,7 +77,7 @@ def plot():
 
   # fig.write_html("index.html")
   # fig.write_image("figCopy.png")
-  
+
 plot()
 
 del df["Dividends"]
@@ -165,14 +165,7 @@ else:
 
 sys.stdout.flush()
 
-print(df["SMA20"])
-sys.stdout.flush()
+df_indicators = df[["Close", "Volume", "Open", "High", "Low", "SMA20", "SMA50", "MACD", "Signal_Line"]]
 
-print(df["SMA50"])
-sys.stdout.flush()
-
-print(df["MACD"])
-sys.stdout.flush()
-
-print(df["Signal_Line"])
+print(df_indicators)
 sys.stdout.flush()
