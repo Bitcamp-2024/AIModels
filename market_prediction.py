@@ -3,6 +3,7 @@ from datetime import date
 import sys
 import pandas as pd
 from prophet import Prophet
+import json
 
 arguements = sys.argv
 symbol = arguements[1]
@@ -53,5 +54,6 @@ m = train_prophet_model(df)
 
 f = generate_forecast(m)
 export = f[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(365) # 365 days forecast
-print(export.tail)
-# plot_forecast(m, f)
+
+print(json.dump(export.to_dict()))
+sys.stdout.flush()
